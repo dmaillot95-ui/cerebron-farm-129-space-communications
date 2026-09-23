@@ -1,0 +1,5 @@
+import json,math,hashlib,pathlib,platform
+# X-band link result + thermal-noise/uncoded BPSK reference
+pr_dbw=-105.97456876968025; bandwidth=1e6; Tsys=250.; k=1.380649e-23; Rb=1e6
+pr=10**(pr_dbw/10); noise=k*Tsys*bandwidth; snr=pr/noise; snr_db=10*math.log10(snr); ebn0=pr/(k*Tsys*Rb); ebn0_db=10*math.log10(ebn0); ber=.5*math.erfc(math.sqrt(ebn0));ok=snr_db>5 and ber<1e-3
+out={"farm":129,"engine":"python-rf-channel-suite-v3","test":"THERMAL_NOISE_UNCODED_BPSK","received_power_dbw":pr_dbw,"bandwidth_hz":bandwidth,"system_temperature_k":Tsys,"bitrate_bps":Rb,"snr_db":snr_db,"eb_n0_db":ebn0_db,"ber_bpsk":ber,"status":"CHANNEL_REFERENCE_OK" if ok else "FAIL","scope":"AWGN_ANALYTIC_CHANNEL_NOT_RF_HARDWARE_OR_PROPAGATION_VALIDATION","python":platform.python_version()};raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f129_channel_suite_v3.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
