@@ -1,0 +1,4 @@
+import json,math,hashlib,pathlib,platform
+f=8.4e9;d=4e8;c=299792458.;pt_dbw=20.;gt_dbi=45.;gr_dbi=55.;loss_db=3.;fspl=20*math.log10(4*math.pi*d*f/c);pr=pt_dbw+gt_dbi+gr_dbi-loss_db-fspl
+ok=222<fspl<224 and -107<pr<-105
+out={"farm":129,"engine":"python-rf-link-reference-suite-v2","test":"X_BAND_LINK_BUDGET","frequency_hz":f,"distance_m":d,"fspl_db":fspl,"received_power_dbw":pr,"status":"REFERENCE_SUITE_OK" if ok else "FAIL","scope":"ANALYTIC_RF_REFERENCE_NOT_HARDWARE_OR_CHANNEL_VALIDATION","python":platform.python_version()};raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f129_reference_suite.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
