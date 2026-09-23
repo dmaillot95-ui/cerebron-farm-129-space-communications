@@ -1,0 +1,4 @@
+import json,hashlib,pathlib,platform
+import math
+f=8.4e9;c=299792458.;d=4e8;pt=20.;gt=35.;gr=45.;loss=3.;fspl=20*math.log10(4*math.pi*d*f/c);pr=pt+gt+gr-loss-fspl;out={"frequency_hz":f,"distance_m":d,"fspl_db":fspl,"received_power_dbw":pr};ok=fspl>200 and pr<0
+out.update({"farm":129,"engine":"python-engineering-batch-canary","engine_version":platform.python_version(),"test":"RF_LINK_BUDGET","status":"REAL_ENGINE_CANARY_OK" if ok else "FAIL","epistemic_status":"ENGINEERING_CANARY_NOT_PHYSICAL_VALIDATION"});raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f129_engine_canary.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
