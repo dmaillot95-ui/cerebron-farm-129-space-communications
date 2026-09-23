@@ -1,0 +1,20 @@
+name: F129 Scientific Suite
+on:
+  workflow_dispatch:
+  push:
+    paths: ['runtime/channel_suite_v3.py','.github/workflows/channel-suite-v3.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python runtime/channel_suite_v3.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f129-scientific-suite
+          path: artifacts/f129_channel_suite_v3.json
